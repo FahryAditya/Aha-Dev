@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum OrderStatus {
+  PENDING
+  UNDER_REVIEW
+  ACCEPTED
+  IN_PROGRESS
+  COMPLETED
+  REJECTED
+  CANCELLED
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
+model Order {
+  id                  String             @id @default(uuid())
+  orderNumber         String             @unique @map("order_number")
+  clientName          String             @map("client_name")
+  email               String
+  contact             String
+  discordUsername     String?            @map("discord_username")
+  clientType          String             @map("client_type")
+  organizationName    String?            @map("organization_name")
+  
+  projectName         String             @map("project_name")
+  websiteType         String             @map("website_type")
+  websiteGoal         String             @map("website_goal")
+  targetAudience      String             @map("target_audience")
+  problemToSolve      String             @map("problem_to_solve")
+  projectDescription  String             @map("project_description")
+  
+  features            Json
+  projectExpectations Json               @map("project_expectations")
+  status              OrderStatus        @default(PENDING)
+  
+  createdAt           DateTime           @default(now()) @map("created_at")
+  updatedAt           DateTime           @updatedAt @map("updated_at")
+
+  notifications       OrderNotification[]
+  statusHistory       OrderStatusHistory[]
+
+  @@map("orders")
+}
+
+model OrderNotification {
+  id               String             @id @default(uuid())
+  orderId          String             @map("order_id")
+  deliveryStatus   NotificationStatus @default(PENDING) @map("delivery_status")
+  retryCount       Int                @default(0) @map("retry_count")
+  discordMessageId String?            @map("discord_message_id")
+  lastError        String?            @map("last_error")
+  createdAt        DateTime           @default(now()) @map("created_at")
+  updatedAt        DateTime           @updatedAt @map("updated_at")
+
+  order            Order              @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("order_notifications")
+}
+
+model OrderStatusHistory {
+  id             String       @id @default(uuid())
+  orderId        String       @map("order_id")
+  previousStatus OrderStatus? @map("previous_status")
+  newStatus      OrderStatus  @map("new_status")
+  changedBy      String       @default("system") @map("changed_by")
+  note           String?
+  createdAt      DateTime     @default(now()) @map("created_at")
+
+  order          Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("order_status_history")
+}

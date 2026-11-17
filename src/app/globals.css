@@ -1,0 +1,370 @@
+@import "tailwindcss";
+
+@layer tokens {
+  :root {
+    /* 1. Core Palette: Queen of Hearts (Crimson – Silver – Deep Indigo – Obsidian) */
+    --bg-indigo-deep: #131126;
+    --bg-indigo-mid: #1e193b;
+    --bg-obsidian: #0b0a12;
+
+    --crimson-primary: #d91e36;
+    --crimson-dark: #8c0f22;
+    --crimson-glow: rgba(217, 30, 54, 0.45);
+
+    --silver-pure: #f8f9fc;
+    --silver-muted: #cfd4e2;
+    --silver-shadow: #9aa3ba;
+
+    --ink-black: #09080d;
+    --panel-white: #ffffff;
+
+    /* 2. Pop-Art & RGB Split Accents */
+    --accent-cyan: #00e5ff;
+    --accent-magenta: #ff2a85;
+    --accent-gold: #ffe66d;
+    --accent-emerald: #10b981;
+    --accent-emerald-glow: rgba(16, 185, 129, 0.45);
+
+    /* 3. Halftone & Pattern Tokens */
+    --halftone-color: rgba(154, 163, 186, 0.14);
+    --halftone-crimson: rgba(217, 30, 54, 0.22);
+
+    /* 4. Comic Borders & Shadows */
+    --border-comic: 3px solid var(--ink-black);
+    --shadow-comic: 5px 5px 0px var(--ink-black);
+    --shadow-crimson: 5px 5px 0px var(--crimson-primary);
+    --shadow-cyan-crimson:
+      -3px -3px 0px var(--accent-cyan),
+      5px 5px 0px var(--crimson-primary),
+      8px 8px 0px var(--ink-black);
+
+    --transition-snappy: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--bg-indigo-deep);
+  color: var(--silver-pure);
+  font-family: var(--font-sans, "Plus Jakarta Sans", system-ui, sans-serif);
+  line-height: 1.55;
+  overflow-x: hidden;
+  position: relative;
+
+  /* Ben-Day Halftone Dots + Deep Crimson Vignette */
+  background-image:
+    radial-gradient(circle at 50% 18%, rgba(217, 30, 54, 0.16), transparent 60%),
+    radial-gradient(var(--halftone-color) 1.5px, transparent 1.5px),
+    radial-gradient(var(--halftone-crimson) 1.5px, transparent 1.5px);
+  background-size: 100% 100%, 16px 16px, 16px 16px;
+  background-position: 0 0, 0 0, 8px 8px;
+}
+
+/* Fixed Diagonal RGB Speed Ribbon Accent */
+body::before {
+  content: "";
+  position: fixed;
+  top: -18%;
+  right: 10%;
+  width: 36px;
+  height: 145vh;
+  background: linear-gradient(
+    90deg,
+    var(--accent-cyan) 0% 25%,
+    var(--crimson-primary) 25% 75%,
+    var(--accent-magenta) 75% 100%
+  );
+  transform: rotate(24deg);
+  opacity: 0.65;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Secondary Left Diagonal Ribbon */
+body::after {
+  content: "";
+  position: fixed;
+  bottom: -20%;
+  left: 5%;
+  width: 18px;
+  height: 120vh;
+  background: linear-gradient(
+    90deg,
+    var(--accent-magenta) 0% 45%,
+    var(--accent-cyan) 45% 100%
+  );
+  transform: rotate(24deg);
+  opacity: 0.3;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Comic Display & Fonts */
+.font-display {
+  font-family: var(--font-display, "Cinzel", Georgia, serif);
+}
+
+.font-mono-code {
+  font-family: var(--font-mono, "JetBrains Mono", monospace);
+}
+
+.chromatic-title {
+  font-family: var(--font-display, "Cinzel", Georgia, serif);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-shadow:
+    -2px 0px 0px var(--accent-cyan),
+    2px 0px 0px var(--crimson-primary);
+}
+
+/* Suit Badges */
+.suit-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.32rem 0.85rem;
+  background: var(--crimson-primary);
+  color: var(--silver-pure);
+  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 2px solid var(--ink-black);
+  box-shadow: 3px 3px 0px var(--ink-black);
+}
+
+.suit-badge__diamond {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: var(--silver-pure);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+
+/* Four-point Animated Gold Sparkles */
+.sparkle {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  background: var(--accent-gold);
+  clip-path: polygon(
+    50% 0%,
+    63% 37%,
+    100% 50%,
+    63% 63%,
+    50% 100%,
+    37% 63%,
+    0% 50%,
+    37% 37%
+  );
+  filter: drop-shadow(0 0 8px rgba(255, 230, 109, 0.75));
+  animation: pulse-sparkle 2.8s infinite ease-in-out;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes pulse-sparkle {
+  0%, 100% {
+    transform: scale(0.85) rotate(0deg);
+    opacity: 0.45;
+  }
+  50% {
+    transform: scale(1.15) rotate(18deg);
+    opacity: 0.95;
+  }
+}
+
+/* Comic Panel Cards */
+.comic-card {
+  background: rgba(19, 17, 38, 0.92);
+  backdrop-filter: blur(12px);
+  border: var(--border-comic);
+  box-shadow: var(--shadow-comic);
+  border-radius: 0.75rem;
+  padding: 1.5rem 1.65rem;
+  position: relative;
+  transition: transform 0.25s var(--transition-snappy), box-shadow 0.25s ease;
+}
+
+.comic-card--hero {
+  box-shadow: var(--shadow-cyan-crimson);
+}
+
+.comic-card--crimson {
+  box-shadow: var(--shadow-crimson);
+}
+
+/* Checkerboard Collar Accent Strip */
+.comic-card--checker::before {
+  content: "";
+  display: block;
+  height: 8px;
+  width: 100%;
+  margin-bottom: 1.15rem;
+  border-radius: 2px;
+  background-image:
+    linear-gradient(45deg, var(--ink-black) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--ink-black) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--ink-black) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--ink-black) 75%);
+  background-size: 10px 10px;
+  background-color: var(--silver-pure);
+  border: 1.5px solid var(--ink-black);
+}
+
+/* Comic Buttons */
+.btn-royal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 0.78rem 1.4rem;
+  background: var(--crimson-primary);
+  color: var(--silver-pure);
+  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-weight: 700;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  border: var(--border-comic);
+  border-radius: 0.45rem;
+  box-shadow:
+    -2px -2px 0px var(--accent-cyan),
+    4px 4px 0px var(--ink-black);
+  cursor: pointer;
+  transition: transform 0.2s var(--transition-snappy), box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.btn-royal:hover:not(:disabled) {
+  background: var(--silver-pure);
+  color: var(--ink-black);
+  transform: translate(-2px, -2px);
+  box-shadow:
+    -3px -3px 0px var(--accent-magenta),
+    6px 6px 0px var(--crimson-primary);
+}
+
+.btn-royal:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px var(--ink-black);
+}
+
+.btn-royal:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  filter: grayscale(0.5);
+}
+
+.btn-tactical {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.52rem 0.95rem;
+  background: var(--bg-obsidian);
+  color: var(--silver-pure);
+  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border: 2.5px solid var(--ink-black);
+  border-radius: 0.4rem;
+  box-shadow: 3px 3px 0px var(--ink-black);
+  cursor: pointer;
+  transition: transform 0.18s var(--transition-snappy), background 0.18s ease, box-shadow 0.18s ease;
+}
+
+.btn-tactical:hover:not(:disabled) {
+  background: var(--bg-indigo-mid);
+  border-color: var(--accent-cyan);
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px var(--crimson-primary);
+}
+
+.btn-tactical:active:not(:disabled) {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px var(--ink-black);
+}
+
+/* Comic Form Controls */
+.comic-input {
+  width: 100%;
+  padding: 0.72rem 0.95rem;
+  background: var(--bg-obsidian);
+  color: var(--silver-pure);
+  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-size: 0.88rem;
+  border: 2.5px solid var(--ink-black);
+  box-shadow: inset 0 0 0 1px rgba(207, 212, 226, 0.16), 3px 3px 0px var(--ink-black);
+  border-radius: 0.45rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.comic-input:focus {
+  border-color: var(--accent-cyan);
+  box-shadow: 3px 3px 0px var(--crimson-primary);
+}
+
+.comic-input::placeholder {
+  color: var(--silver-shadow);
+  opacity: 0.65;
+}
+
+/* Comic Select */
+.comic-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300e5ff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.85rem center;
+  background-size: 1.1em;
+}
+
+/* Status Pills */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.72rem;
+  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border: 2px solid var(--ink-black);
+  border-radius: 999px;
+  box-shadow: 2px 2px 0px var(--ink-black);
+}
+
+.status-pill--pending {
+  background: var(--accent-gold);
+  color: var(--ink-black);
+}
+
+.status-pill--review {
+  background: rgba(0, 229, 255, 0.2);
+  color: var(--accent-cyan);
+  border-color: var(--accent-cyan);
+}
+
+.status-pill--accepted,
+.status-pill--completed {
+  background: var(--accent-emerald);
+  color: var(--ink-black);
+}
+
+.status-pill--in_progress {
+  background: var(--crimson-primary);
+  color: var(--silver-pure);
+}
+
+.status-pill--rejected,
+.status-pill--cancelled {
+  background: var(--crimson-dark);
+  color: var(--silver-pure);
+}
