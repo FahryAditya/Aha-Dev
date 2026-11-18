@@ -42,8 +42,8 @@ export function createOrderEmbed(order: OrderData) {
     .setTitle(`👑 AHA DEV — PERMINTAAN WEBSITE BARU`)
     .setDescription(
       `**Nomor Order:** \`${order.orderNumber}\`\n**Status:** 🟡 **${order.status}**\n**Waktu Pengiriman:** <t:${Math.floor(
-        order.createdAt.getTime() / 1000
-      )}:F>`
+        order.createdAt.getTime() / 1000,
+      )}:F>`,
     )
     .setColor(0xd91e36) // Queen of Hearts Crimson
     .addFields(
@@ -88,6 +88,7 @@ export function createOrderEmbed(order: OrderData) {
         value: techSummary,
         inline: true,
       },
+
       {
         name: "🎨 Ekspektasi & Desain",
         value: [
@@ -99,7 +100,7 @@ export function createOrderEmbed(order: OrderData) {
           .filter(Boolean)
           .join("\n"),
         inline: true,
-      }
+      },
     )
     .setFooter({
       text: "Aha Dev Website Order Management System",
@@ -122,20 +123,30 @@ export function createOrderActionButtons(orderId: string, disabled = false) {
     new ButtonBuilder()
       .setCustomId(`btn_accept_${orderId}`)
       .setLabel("Accept Order")
+
       .setStyle(ButtonStyle.Success)
       .setEmoji("✅")
+
       .setDisabled(disabled),
+
     new ButtonBuilder()
+
       .setCustomId(`btn_review_${orderId}`)
+
       .setLabel("Review Order")
+
       .setStyle(ButtonStyle.Primary)
+
       .setEmoji("🔍")
+
       .setDisabled(disabled),
+
     new ButtonBuilder()
+
       .setCustomId(`btn_reject_${orderId}`)
       .setLabel("Reject Order")
       .setStyle(ButtonStyle.Danger)
       .setEmoji("❌")
-      .setDisabled(disabled)
+      .setDisabled(disabled),
   );
 }
